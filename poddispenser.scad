@@ -38,12 +38,20 @@ module standing_column(height=80) {
     }
 }
 
+// height of this thing has to be an exact coffee cup.
+module selector() {
+    standing_column(height=40);
+}
+
+
 module ejector_base(height=30) {
     angle=45;
     m = [[ 1, 0, 0, 0],
          [ 0, 1, -0.3, 0],
          [ 0, 0, 1, 0],
          [ 0, 0, 0, 1]];
+    translate([0,0,height])
+    rotate([180,0,30])
     difference() {
         cylinder($fn=100,r=60,h=height);
         translate([0, 0,-1]) multmatrix(m) linear_extrude(h=height) translate([0,-52,0]) capsule_cutout_openface();
@@ -52,6 +60,6 @@ module ejector_base(height=30) {
 
 
 
-standing_column();
-
-//ejector_base();
+translate ([0,0,74]) standing_column();
+translate([0,0,32]) rotate([0,0,$t*100]) selector();
+ejector_base();
