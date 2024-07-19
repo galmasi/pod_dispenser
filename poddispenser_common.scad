@@ -1,3 +1,4 @@
+
 // approximates a capsule 
 module capsule_cutout() {
     polygon(points=[[-20,0],[20,0],[20,3],[15,4],[13,26],[5,35],[-5,35],[-13,26],[-15,4],[-20,3]]);
@@ -38,4 +39,26 @@ module rimmedwall(radius=60,wallthickness=2,wallheight=60) {
             translate([0,0,wallheight]) cylinder($fn=100,r=radius+wallthickness,h=3);
         }
     }
+}
+
+
+bearingheight=7;
+bearingdia=22;
+wallwidth=2;
+
+// motorheight is the height of the vma401 stepper motor, all the way to the useful part of the axle
+// motoroffset is how offcenter the vma401 axle is
+// motordia is the diameter of the vma401 motor
+
+motorheight=23;
+motordia=28;
+motoroffset=7;
+motorflapdepth=4;
+
+module bearingholder_plus() {
+    cylinder($fn=30,r=bearingdia/2+3,h=bearingheight+2);
+}
+
+module bearingholder_minus() {
+     translate([0,0,wallwidth]) cylinder($fn=40,r=bearingdia/2+0.1,h=bearingheight+1);
 }
