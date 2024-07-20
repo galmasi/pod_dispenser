@@ -11,7 +11,7 @@ module poddispenser_blockplate (radius=60, wallwidth=2,bearingheight=7,bearingdi
         union() {
             // axle hole
             translate([0,0,-1]) cylinder($fn=20,r=8, h=2*bearingheight);
-            // bearing
+            // bearing seat
             translate([0,0,wallwidth]) cylinder($fn=40,r=bearingdia/2+0.1,h=bearingheight+1);
             // capsule cutout
             translate([0,-52,-0.01]) 

@@ -9,7 +9,8 @@ module screw_cone_plus() {
 }
 
 module screw_cone_minus() {
-    cylinder($fn=40,r1=15,r2=8,h=7);
+    translate([0,0,1]) cylinder($fn=40,r1=15,r2=8,h=6);
+    cylinder($fn=50,r=15,h=1);
 }
 
 module poddispenser_ejector(radius=60,height=31) {
@@ -30,7 +31,7 @@ module poddispenser_ejector(radius=60,height=31) {
                 for (angle=[0,60,120,180,240,300]) {
                     rotate([0,0,angle]) {
                         translate([0,-52,0]) multmatrix(m) 
-                            linear_extrude(height=height, scale=[1,0.5]) 
+                            linear_extrude(height=height, scale=[1,27.0/37.0]) 
                                 capsule_outline_open();
                         translate([0,0,height/2]) cube([2,33,height], center=true);
                     }

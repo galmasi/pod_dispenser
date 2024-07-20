@@ -27,18 +27,8 @@ module poddispenser_base (radius=60, wallheight=40, wallthickness=2) {
                 translate([0,0,-0.001]) cylinder($fn=100, r2=radius, r1=radius+18, h=motorheight-4);
             }
             //  wall on top + rim
-            translate([0,0,motorheight]) difference() {
-                union() {
-                    cylinder($fn=100,r=radius+wallthickness,h=wallheight);
-                    translate([0,0,wallheight-3]) cylinder($fn=100,r1=radius+wallthickness,r2=radius+wallthickness+1,h=4);
-                    
-                }
-                union() {
-                    translate([0,0,-1]) cylinder($fn=100,r=radius,h=wallheight+3);
-                    //translate([radius,0,0]) cube([10,6,25],center=true);
-                    translate([0,0,wallheight]) cylinder($fn=100,r=radius+wallthickness,h=3);
-                }
-            }
+            translate([0,0,motorheight]) rimmedwall(wallheight=wallheight);
+
             // support structure for foot
             for (x=[bearingdia/2+wallwidth+1, 30,45,60])
             difference()  {
@@ -54,17 +44,17 @@ module poddispenser_base (radius=60, wallheight=40, wallthickness=2) {
         }
         union() {
             // motor
-            translate([45,0,-0.01]) rotate([0,0,180]) motor();
+            translate([48,0,-0.01]) rotate([0,0,180]) motor();
             //capsule exit
             translate([-radius, 0, motorheight+21.001]) cube([40,40,42], center=true);
             // exit ramp
             translate([-radius, 0, motorheight+18]) rotate([0,-10,0]) cube([40,40,42], center=true);
             
-            // bearing hole
+            // bearing seat
             translate([0,0,motorheight-bearingheight])
-                cylinder($fn=30,r=bearingdia/2,h=bearingheight+0.01);
+                cylinder($fn=30,r=bearingdia/2+0.1,h=bearingheight+0.01);
             // axle hole
-            cylinder($fn=30,r=4,h=50);
+            cylinder($fn=30,r=8,h=50);
 
         }
     }

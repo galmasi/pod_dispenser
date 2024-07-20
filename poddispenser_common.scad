@@ -26,13 +26,19 @@ module capsule_outline_open() {
 }
 
 
+radius=60;
+wallthickness=2;
 // rimmed wall
-
-module rimmedwall(radius=60,wallthickness=2,wallheight=60) {
+module rimmedwall(wallheight=60) {
     difference() {
         union() {
             cylinder($fn=100,r=radius+wallthickness,h=wallheight);
             translate([0,0,wallheight-3]) cylinder($fn=100,r1=radius+wallthickness,r2=radius+wallthickness+1,h=4);
+	    // ridges on the wall to improve printing
+	    for (angle=[0:30:360])
+	        rotate([0,0,angle])
+	            translate([radius, 0, 1])
+		        cylinder($fn=20,r=wallthickness+1,h=wallheight-1);
         }
         union() {
             translate([0,0,-1]) cylinder($fn=100,r=radius,h=wallheight+3);
@@ -53,7 +59,7 @@ wallwidth=2;
 motorheight=23;
 motordia=28;
 motoroffset=7;
-motorflapdepth=4;
+motorflapdepth=3;
 
 module bearingholder_plus() {
     cylinder($fn=30,r=bearingdia/2+3,h=bearingheight+2);
