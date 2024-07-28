@@ -1,21 +1,22 @@
-use <poddispenser_common.scad>
+include <poddispenser_common.scad>
 
-module poddispenser_topstabilizer (radius=60, wallwidth=2,bearingheight=7,bearingdia=22) {
+module poddispenser_topstabilizer () {
     difference() {
         // bearing holder
-        cylinder($fn=30,r=bearingdia/2+3,h=bearingheight+2);
+        bearingholder_plus();
         union() {
             // axle hole
-            translate([0,0,-1]) cylinder($fn=20,r=8, h=2*bearingheight);
+            translate([0,0,-1]) cylinder($fn=20,r=8, h=2*g_bearingheight);
             // bearing
-            translate([0,0,wallwidth]) cylinder($fn=40,r=bearingdia/2+0.1,h=bearingheight+1);
+            bearingholder_minus();
         }
     }
+    // spokes
     for (angle=[0,60,120,180,240,300])
         rotate([0,0,angle])
-            translate([radius/2+bearingdia/4,0,bearingheight/2]) 
-                cube([radius-bearingdia/2,3,bearingheight], center=true);
-    rimmedwall(radius, wallwidth, bearingheight);
+            translate([g_dispenser_radius/2+g_bearingdia/4+0.1,0,g_bearingheight/2]) 
+                cube([g_dispenser_radius-g_bearingdia/2,3,g_bearingheight], center=true);
+    rimmedwall(g_bearingheight);
 }
 
 poddispenser_topstabilizer();

@@ -18,7 +18,7 @@ translate([51,0,0]) {
     }
 }
 
-/*
+
 // small gear, attached to motor
 gearthick=3;
 hubthick=5;
@@ -37,4 +37,3 @@ difference() {
       cube([5,3,hubthick*3],center=true);
     }
 }
-*/

@@ -1,7 +1,7 @@
 use <poddispenser_common.scad>
 
 
-module poddispenser_holder (radius=60, wallthickness=2, wallheight=120) {
+module poddispenser_holder (wallheight=40) {
     difference() {
         union() {
             // six holding channels
@@ -16,11 +16,12 @@ module poddispenser_holder (radius=60, wallthickness=2, wallheight=120) {
             }
             // axle 
             cylinder($fn=30, r=6, h=wallheight);
+            screw_cone_plus();
         }
         union() {
             // axle hole
             translate([0,0,-1]) cylinder($fn=20,r=4,h=wallheight+2);
-            translate([0,0,wallheight-14.999]) cylinder($fn=20,r=15,h=20);
+            screw_cone_minus();
         }
     }
 }

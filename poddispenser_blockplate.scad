@@ -1,25 +1,25 @@
-use <poddispenser_common.scad>
+include <poddispenser_common.scad>
 
-module poddispenser_blockplate (radius=60, wallwidth=2,bearingheight=7,bearingdia=22) {
+module poddispenser_blockplate () {
    difference() {
         union() {
             // base plate
-            cylinder($fn=100,r=radius+wallwidth,h=wallwidth);
+            cylinder($fn=100,r=g_dispenser_radius+g_wallthickness,h=g_wallthickness);
             // bearing holder
-            cylinder($fn=30,r=bearingdia/2+3,h=bearingheight+2);
+            bearingholder_plus();
         }
         union() {
             // axle hole
-            translate([0,0,-1]) cylinder($fn=20,r=8, h=2*bearingheight);
+            translate([0,0,-1]) cylinder($fn=20,r=8, h=2*g_bearingheight);
             // bearing seat
-            translate([0,0,wallwidth]) cylinder($fn=40,r=bearingdia/2+0.1,h=bearingheight+1);
+            bearingholder_minus();
             // capsule cutout
             translate([0,-52,-0.01]) 
                     linear_extrude(height=10)
                         capsule_cutout_widebrim();
         }
     }
-    rimmedwall(radius, wallwidth, bearingheight);
+    rimmedwall(g_bearingheight);
 }
 
 poddispenser_blockplate();

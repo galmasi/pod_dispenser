@@ -1,4 +1,4 @@
-use <poddispenser_common.scad>
+include <poddispenser_common.scad>
 use <parametric_involute_gear_v5.0.scad>
 
 // allows capsules to slide out sideways if permitted by release
@@ -13,7 +13,7 @@ module screw_cone_minus() {
     cylinder($fn=50,r=15,h=1);
 }
 
-module poddispenser_ejector(radius=60,height=31) {
+module poddispenser_ejector(height=31) {
     m = [[ 1, 0, 0, 0],
          [ 0, 1, 0, 0],
          [ 0, 0, 1, 0],
@@ -47,7 +47,7 @@ module poddispenser_ejector(radius=60,height=31) {
             }
         }
         // cutoff cylinder
-        cylinder($fn=100, r=radius-2, h=height);
+        cylinder($fn=100, r=g_dispenser_radius-2, h=height);
     }
 }
 
