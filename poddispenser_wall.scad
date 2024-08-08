@@ -2,4 +2,8 @@ use <poddispenser_common.scad>
 
 
 // wall around holder
-rimmedwall(wallheight=40);
+module poddispenser_wall() {
+   rimmedwall(wallheight=40);
+}
+
+poddispenser_wall();

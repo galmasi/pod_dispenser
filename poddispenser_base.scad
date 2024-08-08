@@ -45,8 +45,8 @@ module buttoncover(){
 
 
 
-module poddispenser_bottom(wallheight=25) {
-difference() {
+module poddispenser_base(wallheight=25) {
+    difference() {
     union() {
         // bottom
         cylinder($fn=100, r=g_bottom_radius, h=g_wallthickness);
@@ -71,9 +71,9 @@ difference() {
                 rotate([0,90,0])
                     cylinder($fn=30,h=40,r=2,center=true);        
     }
-}
+    }
+    rotate([0,0,15]) translate([-g_dispenser_radius-35,0,0]) buttonbase();
 }
 
-translate([80,80,0]) buttoncover();
-rotate([0,0,15]) translate([-g_dispenser_radius-35,0,0]) buttonbase();
-poddispenser_bottom();
+//translate([80,80,0]) buttoncover();
+poddispenser_base();
