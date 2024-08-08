@@ -1,70 +1,79 @@
 include <poddispenser_common.scad>
-// radius is the inner radius (less the thickness of the wall)
+
+buttonside=12; // each side of the button
+buttonheight=14; // height from bottom of wires to hole above button
+buttonwireheight=5; // length of wires at bottom of button
+buttonholedia=12; // diameter of round actual button
+
+g_bottom_radius = g_dispenser_radius + 20 - g_wallthickness;
 
 
-// ********************************************
-// represents the motor itself
-// ********************************************
 
-module vm401_motor () {
-    // motor cylinder
-    translate([g_motoroffset,0,0]) cylinder($fn=30,r=g_motordia/2+0.5,h=g_motorheight+0.02);
-    // motor cutout
-    translate([g_motoroffset+g_motordia/2,0,g_motorheight/2+0.01]) cube([10,16,g_motorheight+0.02],center=true);
-    translate([g_motoroffset+g_motordia/2-2,0,g_motorheight/2+0.01]) cube([4,19,g_motorheight+0.02],center=true);
-    // wire guide
-    translate([g_motoroffset+g_motordia/2,0,g_motorheight/2+0.01]) cube([20, 6, g_motorheight+0.02], center=true);
-    // motor screw flaps
-    translate([g_motoroffset,0,g_motorheight-g_motorflapdepth/2+0.02]) cube([8,42,g_motorflapdepth], center=true);
-}
-
-// ********************************************
-// pod dispenser base
-// ********************************************
-
-
-module poddispenser_base (wallheight=40, radius=g_dispenser_radius) {
+module buttonbase() {
     difference() {
         union() {
-            // foot
-            difference() {
-                cylinder($fn=100,r2=radius+g_wallthickness,r1=radius+20,h=g_motorheight);
-                translate([0,0,-0.001]) cylinder($fn=100, r2=radius, r1=radius+18, h=g_motorheight-4);
-            }
-            //  wall on top + rim
-            translate([0,0,g_motorheight]) rimmedwall(wallheight=wallheight);
-
-            // support structure for foot
-            for (x=[g_bearingdia/2+g_wallthickness+2+0.1, 30,45,60])
-            difference()  {
-                cylinder($fn=40, r=x, h=g_motorheight);
-                translate([0,0,-0.001]) cylinder($fn=40, r=x-2, h=g_motorheight);
-            }
-            // holds the VMA401 motor
-            translate([45-g_motoroffset, 0,0]) cylinder($fn=40,r=24,h=g_motorheight);
-            
-            // holds the bearing
-            translate([0,0,g_motorheight-g_bearingheight-g_wallthickness]) bearingholder_plus();
+            cylinder($fn=50, r=17, h=buttonheight+g_wallthickness);
+            translate([10,0,(buttonheight+g_wallthickness)/2]) cube([20,34,buttonheight+g_wallthickness], center=true);
         }
         union() {
-            // motor
-            // 48 mm off center because of the 12 and 84 toothed gears
-            // engineered to have exactly 12 and 84 mm diameters respectively 
-            // (look at poddispenser_gears.scad)
-            translate([48,0,-0.01]) rotate([0,0,180]) vm401_motor();
+            translate([0,0,g_wallthickness]) cylinder($fn=50, r=15, h=buttonheight+0.01);
+            translate([15,0,buttonheight/2+ g_wallthickness]) cube([30,30,buttonheight+0.01], center=true);
+        }
+    }
+    translate([0,0,g_wallthickness + buttonwireheight/2])
+        cube([buttonside, buttonside, buttonwireheight], center=true);
+    for (i=[-1,1])
+        translate([i*(buttonside/2+1),0,g_wallthickness + buttonwireheight/2+1])
+            cube([2, buttonside, buttonwireheight+2], center=true);    
+}
 
-            //capsule exit
-            translate([-radius, 0, g_motorheight+21.001]) cube([40,40,42], center=true);
-            // exit ramp
-            translate([-radius, 0, g_motorheight+18]) rotate([0,-10,0]) cube([40,40,42], center=true);
-            
-            // bearing seat
-            translate([0,0,g_motorheight-g_bearingheight]) bearingholder_minus();
-
-	    // axle hole
-            cylinder($fn=30,r=8,h=50);
+module buttoncover(){
+    difference() {
+        union() {
+            cylinder($fn=50, r=17, h=g_wallthickness);
+            translate([10,0,g_wallthickness/2]) cube([20,34,g_wallthickness],center=true);
+        }
+        union() {
+            translate([0,0,-0.01]) cylinder($fn=50,r=buttonholedia/2+0.3,h=g_wallthickness+0.02);
+            translate([g_dispenser_radius+35, 0, -0.01]) cylinder($fn=100, r=g_bottom_radius + g_wallthickness, h=g_wallthickness+0.02);
         }
     }
 }
 
-poddispenser_base();
+
+
+
+
+
+module poddispenser_bottom(wallheight=25) {
+difference() {
+    union() {
+        // bottom
+        cylinder($fn=100, r=g_bottom_radius, h=g_wallthickness);
+        // wall around holder
+        rimmedwall(wallheight=wallheight, radius=g_bottom_radius);
+        // hold the bearing
+        scale([1,1,1.5]) bearingholder_plus();
+    }
+    union() {
+        // attach the bearing from _below_
+        translate([0,0,-6]) scale([1.05,1.05,1.5]) bearingholder_minus();
+        // hole for the axle
+        cylinder($fn=20,r=8,h=30);
+        // hole for the USB wire
+        rotate([0,0,15])
+            translate([0,g_dispenser_radius+20,wallheight/2])
+                rotate([90,0,0])
+                    cylinder($fn=30,h=40,r=2.5,center=true);
+        // hole for pusbutton wires
+       rotate([0,0,15])
+            translate([-g_dispenser_radius-20,0,8])
+                rotate([0,90,0])
+                    cylinder($fn=30,h=40,r=2,center=true);        
+    }
+}
+}
+
+translate([80,80,0]) buttoncover();
+rotate([0,0,15]) translate([-g_dispenser_radius-35,0,0]) buttonbase();
+poddispenser_bottom();
