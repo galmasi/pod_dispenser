@@ -53,11 +53,11 @@ module poddispenser_base(wallheight=25) {
         // wall around holder
         rimmedwall(wallheight=wallheight, radius=g_bottom_radius);
         // hold the bearing
-        scale([1,1,1.5]) bearingholder_plus();
+        scale([1,1,2.5]) bearingholder_plus();
     }
     union() {
         // attach the bearing from _below_
-        translate([0,0,-6]) scale([1.05,1.05,1.5]) bearingholder_minus();
+        translate([0,0,-6]) scale([1.05,1.05,2.4]) bearingholder_minus();
         // hole for the axle
         cylinder($fn=20,r=8,h=30);
         // hole for the USB wire
