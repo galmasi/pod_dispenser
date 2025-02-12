@@ -1,4 +1,5 @@
 include <poddispenser_common.scad>
+include <poddispenser_gears.scad>
 
 buttonside=12; // each side of the button
 buttonheight=14; // height from bottom of wires to hole above button
@@ -8,6 +9,7 @@ buttonholedia=12; // diameter of round actual button
 g_bottom_radius = g_dispenser_radius + 20 - g_wallthickness;
 
 
+basewallheight=31;
 
 module buttonbase() {
     difference() {
@@ -43,37 +45,65 @@ module buttoncover(){
 
 
 
-
-
-module poddispenser_base(wallheight=25) {
-    difference() {
+module poddispenser_base(wallheight=20) {
+  difference() {
     union() {
         // bottom
         cylinder($fn=100, r=g_bottom_radius, h=g_wallthickness);
-        // wall around holder
+
+        // wall
         rimmedwall(wallheight=wallheight, radius=g_bottom_radius);
-        // hold the bearing
-        scale([1,1,2.5]) bearingholder_plus();
+
+        // central bearing
+        cylinder($fn=40, r=15,h=wallheight);
+
+        // motor ; motor gear
+        translate([0-g_motoroffset, 40,0]) cylinder($fn=40,r=23,h=g_motorheight);
+        //color("red") translate([0,40,g_motorheight]) motorgear();
+        
+        // second gear, distance 6+18=24 from motor axle, position [24, 40]
+        translate([30,38,0]) cylinder($fn=50, r=7,h=g_motorheight);
+        //color("red") translate([30,38,g_motorheight+1]) gear_byfour();
+                
+        // ejector's gear
+        //color("green") translate([0,0, 30]) ejectorgear();
     }
-    union() {
-        // attach the bearing from _below_
-        translate([0,0,-6]) scale([1.05,1.05,2.4]) bearingholder_minus();
-        // hole for the axle
-        cylinder($fn=20,r=8,h=30);
+    union() {        
+        // central axle shaft
+        cylinder($fn=20,r=8,h=wallheight+1);
+        
+        // central bearing: hole from _below_
+        translate([0,0,-0.01]) cylinder($fn=40,r=g_bearingdia/2+0.1,h=18);
+        translate([0,0,17.9]) cylinder($fn=40,r1=g_bearingdia/2, r2=g_bearingdia/3, h=5);
+        
+        // central bearing: from above
+        translate([0,0, wallheight-g_bearingheight-1+0.01])
+            cylinder($fn=40,r=g_bearingdia/2+0.1,h=g_bearingheight+1);
+        
+        // motor
+        translate([0,40,0]) rotate([0,0,180]) vm401_motor();
+
+        // axle shaft for second gear
+        translate([30,38,5]) cylinder($fn=30, r=2.5,h=g_motorheight);
+
+        // axle shaft for third gear
+        //translate([44.5,18.5,5]) cylinder($fn=30,r=2.5, h=g_motorheight-5);
+
         // hole for the USB wire
-        rotate([0,0,15])
-            translate([0,g_dispenser_radius+20,wallheight/2])
+        rotate([0,0,-135])
+            translate([0,g_dispenser_radius+20,wallheight/3])
                 rotate([90,0,0])
                     cylinder($fn=30,h=40,r=2.5,center=true);
+
         // hole for pusbutton wires
-       rotate([0,0,15])
+        rotate([0,0,-45])
             translate([-g_dispenser_radius-20,0,8])
                 rotate([0,90,0])
-                    cylinder($fn=30,h=40,r=2,center=true);        
+                    cylinder($fn=30,h=40,r=2,center=true);
     }
-    }
-    rotate([0,0,15]) translate([-g_dispenser_radius-35,0,0]) buttonbase();
+  }
+  rotate([0,0,-45]) translate([-g_dispenser_radius-35,0,0]) buttonbase();  
 }
 
-//translate([80,80,0]) buttoncover();
-poddispenser_base();
+translate([80,80,0]) buttoncover();
+poddispenser_base(basewallheight);

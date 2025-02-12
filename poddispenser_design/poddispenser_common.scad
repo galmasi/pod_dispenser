@@ -8,18 +8,6 @@ g_dispenser_radius=60;
 g_wallthickness=2;
 
 /* ************************************************************************** */
-// definitions for the VMA401 stepper motor
-// motorheight is the height of the vma401 stepper motor, all the way to the useful part of the axle
-// motoroffset is how offcenter the vma401 axle is
-// motordia is the diameter of the vma401 motor
-/* ************************************************************************** */
-
-g_motorheight=23;
-g_motordia=28;
-g_motoroffset=7;
-g_motorflapdepth=3;
-
-/* ************************************************************************** */
 // definitions for axle bearing
 /* ************************************************************************** */
 
@@ -114,5 +102,36 @@ module screw_cone_plus() {
 module screw_cone_minus() {
     translate([0,0,1]) cylinder($fn=40,r1=15,r2=8,h=6);
     cylinder($fn=50,r=15,h=1);
+}
+
+
+/* ************************************************************************** */
+// definitions for the VMA401 stepper motor
+// motorheight is the height of the vma401 stepper motor, all the way to the useful part of the axle
+// motoroffset is how offcenter the vma401 axle is
+// motordia is the diameter of the vma401 motor
+/* ************************************************************************** */
+
+g_motorheight=23;
+g_motordia=28;
+g_motoroffset=8;
+g_motorflapdepth=3;
+
+// ********************************************
+// represents the motor itself
+// centered around the motor's axle
+// motor's gear is at height g_motorheight to g_motorheight+5
+// ********************************************
+
+module vm401_motor () {
+    // motor cylinder
+    translate([g_motoroffset,0,0]) cylinder($fn=30,r=g_motordia/2+0.5,h=g_motorheight+0.02);
+    // motor cutout
+    translate([g_motoroffset+g_motordia/2,0,g_motorheight/2+0.01]) cube([10,16,g_motorheight+0.02],center=true);
+    translate([g_motoroffset+g_motordia/2-2,0,g_motorheight/2+0.01]) cube([4,19,g_motorheight+0.02],center=true);
+    // wire guide
+    translate([g_motoroffset+g_motordia/2,0,g_motorheight/2+0.01]) cube([20, 6, g_motorheight+0.02], center=true);
+    // motor screw flaps
+    translate([g_motoroffset,0,g_motorheight-g_motorflapdepth/2+0.02]) cube([8,42,g_motorflapdepth], center=true);
 }
 
